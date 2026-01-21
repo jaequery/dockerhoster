@@ -82,6 +82,15 @@ networks:
 
 Then run `docker-compose up -d` to start your app. Make sure your domain name points to your server's IP address.
 
+## That's It! Super Simple Setup
+
+**For any project, you only need 2 things:**
+
+1. **Copy the GitHub Actions workflow** (`.github/workflows/deploy.yml`) - This makes your app deploy automatically when you push to GitHub
+2. **Copy the docker-compose.yml file** - This tells DockerHoster how to run your app
+
+That's literally all you need! Just copy these two files to any project, update the domain name in docker-compose.yml, add your GitHub secrets, and push to GitHub. Your app will deploy automatically.
+
 ## Example: Deploy a Next.js App
 
 We have a complete working example you can copy! Check out [`examples/nextjs-hello-world/`](examples/nextjs-hello-world/). It includes:
