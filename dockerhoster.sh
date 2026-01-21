@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # DockerHoster – one-command Docker vhost hosting via nginx-proxy
-# Supports: Ubuntu 18.04+ (LTS)
+# Supports: Ubuntu 22.04 LTS or later (latest LTS recommended)
 # Commands: start | stop | restart | status
 
 set -euo pipefail
