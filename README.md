@@ -72,6 +72,47 @@ Run multiple applications, databases, and services on a single affordable VPS in
 - **Permissions**: Root/sudo access required
 - **Ports**: Ports 80 and 443 must be available
 
+## Getting Started
+
+### Step 1: Set Up Your Ubuntu Server
+
+First, you'll need a fresh Ubuntu LTS server. You can get one from:
+
+- **DigitalOcean** (Recommended) 🌟
+- **AWS EC2**
+- **Google Cloud Platform (GCP)**
+- **Linode**
+- **Any VPS provider**
+
+**Why DigitalOcean?**
+
+We recommend **DigitalOcean** for DockerHoster because:
+
+- **💰 Best Price-to-Performance**: Excellent value for money, especially for the 2GB RAM droplet ($12/month)
+- **🚀 Easy Setup**: Simple, intuitive interface - get a server running in under 60 seconds
+- **📊 Transparent Pricing**: No hidden fees, predictable monthly costs
+- **🌍 Global Data Centers**: Choose from multiple regions worldwide
+- **📚 Great Documentation**: Comprehensive guides and tutorials
+- **💳 Flexible Billing**: Pay-as-you-go or monthly plans
+- **🔧 One-Click Apps**: Pre-configured Ubuntu images available
+
+**Quick Setup on DigitalOcean:**
+
+1. Sign up at [digitalocean.com](https://www.digitalocean.com)
+2. Click "Create" → "Droplets"
+3. Choose **Ubuntu 22.04 LTS** (or latest LTS)
+4. Select **Regular Intel** → **Basic** → **$12/month** (2GB RAM / 1 vCPU) - perfect for 20+ sites
+5. Choose your datacenter region
+6. Add your SSH key (or create a new one)
+7. Click "Create Droplet"
+8. Once created, SSH into your server: `ssh root@your-server-ip`
+
+**Minimum Recommended Specs:**
+- **RAM**: 2GB (supports 20+ websites)
+- **CPU**: 1 vCPU
+- **Storage**: 25GB SSD
+- **Cost**: ~$12/month on DigitalOcean
+
 ## Installation
 
 1. Clone or download this repository:
