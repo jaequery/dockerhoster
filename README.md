@@ -1,6 +1,8 @@
 # DockerHoster
 
-A simple, one-command Docker virtual host hosting solution using nginx-proxy. DockerHoster automates the setup and management of an nginx-proxy container that automatically routes traffic to your Docker containers based on virtual host names.
+**Host 20+ websites on a single $12/month server** — without serverless limitations. DockerHoster is a one-command Docker virtual host hosting solution that lets you deploy any language, framework, or Docker container with full access to databases, cronjobs, file systems, and the entire Docker ecosystem.
+
+Perfect for development, testing, early MVPs, and side projects. Works with Next.js, Python, Ruby on Rails, Go, Java, and any application that runs in Docker.
 
 ## Overview
 
