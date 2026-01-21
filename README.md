@@ -1,61 +1,66 @@
 # DockerHoster
 
-**Automated, hassle-free deployment with GitHub CI/CD** — push to GitHub and your app deploys automatically. DockerHoster lets you host 20+ websites on a single $12/month server without serverless limitations. Deploy any language, framework, or Docker container with full access to databases, cronjobs, file systems, and the entire Docker ecosystem.
+**Push your code to GitHub and it automatically deploys** — no complicated setup needed! DockerHoster lets you run 20+ websites on one $12/month server. You can use any programming language or framework you want, and you get full access to databases, scheduled tasks, files, and everything else.
 
-Perfect for development, testing, early MVPs, and side projects. Works with Next.js, Python, Ruby on Rails, Go, Java, and any application that runs in Docker. **A cost-effective alternative to Vercel** with complete control over your infrastructure.
+Great for learning, testing your projects, launching your first app, or running side projects. Works with Next.js, Python, Ruby on Rails, Go, Java, and basically anything that runs in Docker. **Cheaper than Vercel** and you control everything yourself.
 
-**Tested:** Runs 20+ websites on a single 2GB RAM server ($12/month). Uses nginx-proxy to automatically route traffic to Docker containers via `VIRTUAL_HOST` environment variable.
+**We tested it:** It runs 20+ websites on a single server with 2GB of memory ($12/month). It automatically sends visitors to the right website using the domain name you set up.
 
-## Why DockerHoster? Key Benefits
+## Why Use DockerHoster?
 
-DockerHoster runs everything on **your own server**, giving you complete control and flexibility:
+Everything runs on **your own server**, so you're in control:
 
-### 🔄 **Automated GitHub CI/CD Deployment**
-Push to GitHub → automatic deployment. Pre-configured GitHub Actions workflows. No manual SSH or deployment scripts needed.
+### 🔄 **Automatic Deployments**
+Push your code to GitHub and it automatically deploys. Everything is already set up for you. No need to manually connect to your server or run complicated commands.
 
-### 🌐 **Language & Framework Agnostic**
-Works with any language (Python, Node.js, Java, Go, Rust, PHP, Ruby, .NET) and framework (Next.js, Express, Rails, Flask, Django, Laravel, FastAPI). If it runs in Docker, it works.
+### 🌐 **Works with Any Language**
+Use Python, Node.js, Java, Go, Rust, PHP, Ruby, or any other language. Works with Next.js, Express, Rails, Flask, Django, Laravel, FastAPI, or any framework. If it can run in Docker, it works here.
 
-### 🚀 **No Serverless Limitations**
-Cronjobs, SQLite, long-running processes, file system access, background workers — all supported without restrictions.
+### 🚀 **No Limits Like Other Platforms**
+You can run scheduled tasks, use SQLite databases, run programs that take a long time, save files, and run background jobs. No restrictions!
 
-### 🐳 **Full Docker Ecosystem**
-Access PostgreSQL, MySQL, MongoDB, Redis, Typesense, AI vector DBs (Milvus, Weaviate, Qdrant, Chroma), message queues, and thousands of Docker images. Just add to `docker-compose.yml`.
+### 🐳 **Use Any Database or Service**
+You can use PostgreSQL, MySQL, MongoDB, Redis, search engines, AI databases, message queues, and thousands of other tools. Just add them to your `docker-compose.yml` file.
 
-## Requirements
+## What You Need
 
-- **OS**: Ubuntu 22.04 LTS or later (latest LTS recommended)
-- **Permissions**: Root/sudo access
-- **Ports**: 80 and 443 available
+- **Operating System**: Ubuntu 22.04 or newer (get the latest version)
+- **Access**: You need to be able to run commands as administrator (root or sudo)
+- **Ports**: Ports 80 and 443 need to be free (these are used for websites)
 
 ## Getting Started
 
-### Step 1: Set Up Your Ubuntu Server
+### Step 1: Get a Server
 
-Get a fresh Ubuntu 22.04 LTS server from **DigitalOcean** (recommended), AWS, GCP, or any VPS provider.
+You need a server running Ubuntu 22.04 or newer. You can get one from **DigitalOcean** (we recommend this), AWS, Google Cloud, or any company that rents servers.
 
-**DigitalOcean Quick Setup:**
-1. Create droplet → Ubuntu 22.04 LTS → $12/month (2GB RAM / 1 vCPU)
-2. Add SSH key → Create droplet
-3. SSH: `ssh root@your-server-ip`
+**How to Set Up DigitalOcean (Easiest Way):**
+1. Go to DigitalOcean and create a new server (they call it a "droplet")
+2. Pick Ubuntu 22.04
+3. Choose the $12/month plan (2GB memory, 1 CPU)
+4. Add your SSH key (so you can connect to it)
+5. Create the server
+6. Connect to it: `ssh root@your-server-ip`
 
-**Recommended:** 2GB RAM, 1 vCPU, 25GB SSD (~$12/month) supports 20+ websites.
+**What to Get:** 2GB memory, 1 CPU, 25GB storage for about $12/month. This can run 20+ websites!
 
-## Installation & Usage
+## Install and Use
+
+Run these commands on your server:
 
 ```bash
 git clone <repository-url>
 cd dockerhoster
 chmod +x dockerhoster.sh
-sudo ./dockerhoster.sh start    # Installs Docker if needed, starts proxy
-sudo ./dockerhoster.sh stop     # Stops proxy
-sudo ./dockerhoster.sh restart  # Restarts proxy
-sudo ./dockerhoster.sh status   # Check status
+sudo ./dockerhoster.sh start    # This installs Docker if you don't have it, then starts everything
+sudo ./dockerhoster.sh stop     # Stops everything
+sudo ./dockerhoster.sh restart  # Restarts everything
+sudo ./dockerhoster.sh status   # Check if it's running
 ```
 
-## Using with Your Docker Containers
+## How to Deploy Your App
 
-Create a `docker-compose.yml` with `proxy-network` and `VIRTUAL_HOST`:
+Create a file called `docker-compose.yml` in your project. Here's what it should look like:
 
 ```yaml
 version: '3.8'
@@ -66,8 +71,8 @@ services:
     networks:
       - proxy-network
     environment:
-      - VIRTUAL_HOST=myapp.example.com
-      - VIRTUAL_PORT=3000
+      - VIRTUAL_HOST=myapp.example.com    # Your website domain
+      - VIRTUAL_PORT=3000                  # Port your app runs on
     restart: unless-stopped
 
 networks:
@@ -75,61 +80,65 @@ networks:
     external: true
 ```
 
-Deploy: `docker-compose up -d`. Point DNS A record to your server IP.
+Then run `docker-compose up -d` to start your app. Make sure your domain name points to your server's IP address.
 
-## Deployment Examples
+## Example: Deploy a Next.js App
 
-Here are practical examples of how to deploy your projects to a remote Ubuntu server running DockerHoster.
+We have a complete working example you can copy! Check out [`examples/nextjs-hello-world/`](examples/nextjs-hello-world/). It includes:
 
-### Complete Example: Next.js Hello World
+- ✅ A Next.js app that works
+- ✅ A Dockerfile (tells Docker how to build your app)
+- ✅ A docker-compose.yml file (already set up)
+- ✅ GitHub Actions workflow (makes it deploy automatically)
+- ✅ Instructions
 
-A complete, working example project is available in [`examples/nextjs-hello-world/`](examples/nextjs-hello-world/). This includes:
+**How to Use It:**
 
-- ✅ Full Next.js application
-- ✅ Production-ready Dockerfile
-- ✅ Docker Compose configuration
-- ✅ GitHub Actions workflow for automatic deployment
-- ✅ Complete documentation
-
-**Quick Start:**
-
-1. Copy the example to your project:
+1. Copy the example to your project folder:
 ```bash
 cp -r examples/nextjs-hello-world /path/to/your/project
 cd /path/to/your/project
 ```
 
-2. Update `docker-compose.yml` with your domain:
+2. Change the domain name in `docker-compose.yml`:
 ```yaml
 environment:
-  - VIRTUAL_HOST=your-domain.com
+  - VIRTUAL_HOST=your-domain.com    # Put your domain here
 ```
 
-3. Configure GitHub Secrets (SSH_HOST, SSH_USER, SSH_PRIVATE_KEY)
+3. Add these secrets to GitHub (Settings → Secrets):
+   - `SSH_HOST` - Your server's IP address
+   - `SSH_USER` - Usually "root"
+   - `SSH_PRIVATE_KEY` - Your SSH key
 
-4. Push to GitHub - deployment happens automatically!
+4. Push your code to GitHub - it will deploy automatically!
 
-See [`examples/nextjs-hello-world/README.md`](examples/nextjs-hello-world/README.md) for detailed instructions.
+**Important Things to Remember:**
+- Always use `proxy-network` in your docker-compose.yml
+- Set `VIRTUAL_HOST` to your domain name
+- Set `VIRTUAL_PORT` if your app doesn't run on port 80
+- Make sure your domain points to your server's IP address
+- For multiple domains: `VIRTUAL_HOST=example.com,www.example.com`
 
-**Required GitHub Secrets:** `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`
+## If Something Goes Wrong
 
-**Key Points:**
-- Use `proxy-network` network
-- Set `VIRTUAL_HOST` (domain) and `VIRTUAL_PORT` (if not 80)
-- Point DNS A record to server IP
-- Multiple domains: `VIRTUAL_HOST=example.com,www.example.com`
-
-## Troubleshooting
+Run these commands to check what's happening:
 
 ```bash
-sudo ./dockerhoster.sh status  # Check proxy status
-docker logs nginx-proxy        # View logs
-docker network ls | grep proxy-network  # Verify network
+sudo ./dockerhoster.sh status  # See if DockerHoster is running
+docker logs nginx-proxy        # See error messages
+docker network ls | grep proxy-network  # Check if the network exists
 ```
 
-## SSL/HTTPS Setup
+## Setting Up HTTPS (Secure Websites)
 
-Use **Cloudflare** for DNS: Add domain → Create A record → Set SSL mode to "Full" or "Full (strict" → Enable proxy (orange cloud). HTTPS works automatically without server certificates.
+Use **Cloudflare** to make your website secure:
+1. Add your domain to Cloudflare
+2. Create an A record pointing to your server's IP
+3. Set SSL mode to "Full" or "Full (strict)"
+4. Turn on the proxy (the orange cloud icon)
+
+After that, your website will automatically use HTTPS (the secure version) without you needing to set up certificates on your server!
 
 ## License
 
