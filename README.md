@@ -17,7 +17,7 @@ Push your code to GitHub and it automatically deploys. Everything is already set
 Use Python, Node.js, Java, Go, Rust, PHP, Ruby, or any other language. Works with Next.js, Express, Rails, Flask, Django, Laravel, FastAPI, or any framework. If it can run in Docker, it works here.
 
 ### 🚀 **No Limits Like Other Platforms**
-You can run scheduled tasks, use SQLite databases, run programs that take a long time, save files, and run background jobs. No restrictions!
+You can run scheduled tasks, use any open source database (PostgreSQL, MySQL, MongoDB, Redis, SQLite, and more), run programs that take a long time, save files, and run background jobs. No restrictions!
 
 ### 🐳 **Use Any Database or Service**
 You can use PostgreSQL, MySQL, MongoDB, Redis, search engines, AI databases, message queues, and thousands of other tools. Just add them to your `docker-compose.yml` file.
