@@ -91,6 +91,8 @@ Then run `docker-compose up -d` to start your app. Make sure your domain name po
 
 That's literally all you need! Just copy these two files to any project, update the domain name in docker-compose.yml, add your GitHub secrets, and push to GitHub. Your app will deploy automatically.
 
+**I don't think hosting a website yourself can get any simpler than this** (besides using platforms like Vercel, but then you don't control your own server). This is as easy as it gets while still running everything on your own infrastructure. **For complex projects with databases and multiple services, this is actually even simpler** than platforms like Vercel because you can add everything in one docker-compose.yml file instead of managing separate services.
+
 ## Example: Deploy a Next.js App
 
 We have a complete working example you can copy! Check out [`examples/nextjs-hello-world/`](examples/nextjs-hello-world/). It includes:
@@ -141,13 +143,17 @@ docker network ls | grep proxy-network  # Check if the network exists
 
 ## Setting Up HTTPS (Secure Websites)
 
-Use **Cloudflare** to make your website secure:
+I personally prefer **Cloudflare** for SSL because it's super simple and you need to set up DNS anyway! Why reinvent the wheel? You could set up Let's Encrypt certificates yourself, but Cloudflare handles everything automatically.
+
+**Bonus benefits:** Cloudflare also gives you free DDoS protection (stops attacks on your website) and a Web Application Firewall (WAF) that blocks bad traffic automatically. Plus it makes your site faster with their CDN (content delivery network).
+
+**How to set it up:**
 1. Add your domain to Cloudflare
-2. Create an A record pointing to your server's IP
+2. Create an A record pointing to your server's IP (you'd do this anyway for DNS)
 3. Set SSL mode to "Full" or "Full (strict)"
 4. Turn on the proxy (the orange cloud icon)
 
-After that, your website will automatically use HTTPS (the secure version) without you needing to set up certificates on your server!
+That's it! Your website will automatically use HTTPS without you needing to set up certificates on your server. Since you need to configure DNS anyway, using Cloudflare saves you a step and gives you extra protection.
 
 ## License
 
