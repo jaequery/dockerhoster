@@ -14,6 +14,47 @@ DockerHoster has been tested and proven to run **20+ websites** on a single **2G
 - **Side Projects**: Manage multiple projects on a single server
 - **Staging Environments**: Run multiple staging sites efficiently
 
+## Why DockerHoster? Key Benefits
+
+Unlike serverless platforms, DockerHoster runs everything on **your own server**, giving you complete control and flexibility:
+
+### 🌐 **Language & Framework Agnostic**
+Host applications built with **any language or framework**:
+- **Languages**: Python, Node.js, Java, Scala, Go, Rust, PHP, Ruby, .NET, and more
+- **Frameworks**: Next.js, Express, Ruby on Rails, Flask, Django, Spring Boot, Laravel, FastAPI, and any framework that runs in Docker
+- **Platform Independent**: Works with any application that can be containerized
+
+No need to choose a specific platform or language—if it runs in Docker, it runs on DockerHoster.
+
+### 🚀 **No Serverless Limitations**
+- **Cronjobs**: Run scheduled tasks directly in your containers
+- **SQLite**: Use file-based databases without restrictions
+- **Long-running processes**: No timeout limits or cold starts
+- **File system access**: Full read/write access to persistent storage
+- **Background workers**: Run queues, workers, and background jobs seamlessly
+
+### 🐳 **Full Docker Ecosystem Access**
+Because everything is Docker Compose-based, you have access to the entire open-source ecosystem:
+
+**Databases:**
+- **Relational**: PostgreSQL, MySQL, MariaDB, SQLite
+- **NoSQL**: MongoDB, Redis, CouchDB, Cassandra
+- **Search**: Typesense, OpenSearch, Elasticsearch, Meilisearch
+- **AI Vector Databases**: Milvus, Weaviate, Qdrant, Chroma, Pinecone (self-hosted)
+
+**Other Services:**
+- **Message Queues**: RabbitMQ, Redis Queue, BullMQ, Apache Kafka
+- **Caching**: Redis, Memcached
+- **Monitoring**: Prometheus, Grafana, Portainer
+- **And thousands more**: Any Docker image from Docker Hub
+
+Perfect for AI/ML applications that need vector databases for embeddings, RAG (Retrieval-Augmented Generation), and semantic search!
+
+Simply add services to your `docker-compose.yml` and they're instantly available to your applications on the same network.
+
+### 💰 **Cost-Effective**
+Run multiple applications, databases, and services on a single affordable VPS instead of paying per-service on cloud platforms.
+
 ## Features
 
 - **One-command setup**: Start the proxy with a single command
