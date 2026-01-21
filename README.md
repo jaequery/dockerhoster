@@ -6,6 +6,14 @@ A simple, one-command Docker virtual host hosting solution using nginx-proxy. Do
 
 DockerHoster simplifies the process of hosting multiple Docker containers as virtual hosts. It sets up and manages an nginx-proxy container that automatically detects running Docker containers and routes HTTP/HTTPS traffic to them based on the `VIRTUAL_HOST` environment variable.
 
+**Performance & Use Cases:**
+
+DockerHoster has been tested and proven to run **20+ websites** on a single **2GB RAM DigitalOcean instance** without performance issues. This makes it perfect for:
+- **Development & Testing**: Quickly spin up multiple test environments
+- **Early MVP Launches**: Host multiple small-to-medium applications cost-effectively
+- **Side Projects**: Manage multiple projects on a single server
+- **Staging Environments**: Run multiple staging sites efficiently
+
 ## Features
 
 - **One-command setup**: Start the proxy with a single command
@@ -77,37 +85,145 @@ sudo ./dockerhoster.sh status
 
 ## Using with Your Docker Containers
 
-To use DockerHoster with your applications, run your containers with:
+To use DockerHoster with your applications, create a `docker-compose.yml` file with:
 
-1. **Connect to the proxy network**:
-```bash
-docker run --network proxy-network ...
-```
-
-2. **Set the VIRTUAL_HOST environment variable**:
-```bash
-docker run --network proxy-network \
-  -e VIRTUAL_HOST=example.com \
-  your-image
-```
-
+1. **Connect to the proxy network**: Add `proxy-network` as an external network
+2. **Set the VIRTUAL_HOST environment variable**: Add it to your service's environment
 3. **Point your domain**: Configure your DNS to point to the server's IP address
 
 ### Example
+
+Create a `docker-compose.yml` file:
+
+```yaml
+version: '3.8'
+
+services:
+  app:
+    image: your-app-image:latest
+    container_name: myapp
+    networks:
+      - proxy-network
+    environment:
+      - VIRTUAL_HOST=myapp.example.com
+      - VIRTUAL_PORT=3000
+    restart: unless-stopped
+
+networks:
+  proxy-network:
+    external: true
+```
+
+Then deploy:
 
 ```bash
 # Start DockerHoster
 sudo ./dockerhoster.sh start
 
-# Run your application container
-docker run -d \
-  --name myapp \
-  --network proxy-network \
-  -e VIRTUAL_HOST=myapp.example.com \
-  your-app-image
+# Deploy your application
+docker-compose up -d
 ```
 
 Now `myapp.example.com` will automatically route to your container!
+
+## Deployment Examples
+
+Here are practical examples of how to deploy your projects to a remote Ubuntu server running DockerHoster.
+
+### Complete Example: Next.js Hello World
+
+A complete, working example project is available in [`examples/nextjs-hello-world/`](examples/nextjs-hello-world/). This includes:
+
+- ✅ Full Next.js application
+- ✅ Production-ready Dockerfile
+- ✅ Docker Compose configuration
+- ✅ GitHub Actions workflow for automatic deployment
+- ✅ Complete documentation
+
+**Quick Start:**
+
+1. Copy the example to your project:
+```bash
+cp -r examples/nextjs-hello-world /path/to/your/project
+cd /path/to/your/project
+```
+
+2. Update `docker-compose.yml` with your domain:
+```yaml
+environment:
+  - VIRTUAL_HOST=your-domain.com
+```
+
+3. Configure GitHub Secrets (SSH_HOST, SSH_USER, SSH_PRIVATE_KEY)
+
+4. Push to GitHub - deployment happens automatically!
+
+See [`examples/nextjs-hello-world/README.md`](examples/nextjs-hello-world/README.md) for detailed instructions.
+
+### Example 1: Complete GitHub Actions with Docker Build (Next.js)
+
+For simple Next.js projects that build Docker images in CI:
+
+```yaml
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t nextjs-app:latest .
+
+      - name: Save and transfer image
+        run: |
+          docker save nextjs-app:latest | gzip > app.tar.gz
+          scp -o StrictHostKeyChecking=no app.tar.gz docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/root/sites/nextjs-app/
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/sites/nextjs-app
+            docker load < app.tar.gz
+            docker-compose up -d
+```
+
+**Required GitHub Secrets:**
+- `SSH_HOST`: Your server IP (e.g., `147.182.228.87`)
+- `SSH_USER`: SSH username (e.g., `root`)
+- `SSH_PRIVATE_KEY`: Your private SSH key
+
+**Prerequisites for Next.js:**
+- A `Dockerfile` in your project root (see the Next.js Hello World example for a production-ready Dockerfile)
+- A `docker-compose.yml` file with `proxy-network` configuration (see "Using with Your Docker Containers" section above)
+- Your Next.js app configured with `output: 'standalone'` in `next.config.js` for optimal Docker builds
+
+### Key Points for All Examples
+
+1. **Always use `proxy-network`**: Your containers must be on the `proxy-network` Docker network
+2. **Set `VIRTUAL_HOST`**: This tells nginx-proxy which domain to route to your container
+3. **Set `VIRTUAL_PORT`**: If your app doesn't run on port 80, specify the port (e.g., `VIRTUAL_PORT=3000`)
+4. **DNS Configuration**: Point your domain's A record to your server's IP address
+5. **Multiple Domains**: Use comma-separated values: `VIRTUAL_HOST=example.com,www.example.com`
+
+### Pre-deployment Checklist
+
+- [ ] DockerHoster is running on the server (`sudo ./dockerhoster.sh status`)
+- [ ] DNS A record points to your server IP
+- [ ] Container is configured with `VIRTUAL_HOST` environment variable
+- [ ] Container is connected to `proxy-network`
+- [ ] Firewall allows ports 80 and 443
 
 ## Configuration
 
@@ -147,12 +263,25 @@ docker network ls | grep proxy-network
 sudo netstat -tulpn | grep -E ':(80|443)'
 ```
 
+## SSL/HTTPS Setup
+
+For SSL/HTTPS support, use **Cloudflare** for DNS management:
+
+1. **Point your domain to Cloudflare**: Add your domain to Cloudflare and update your nameservers
+2. **Create DNS A record**: Point your domain/subdomain to your server's IP address
+3. **Set SSL mode**: In Cloudflare dashboard, go to **SSL/TLS** → **Overview** and set SSL/TLS encryption mode to **"Full"** or **"Full (strict)"**
+   - **Full**: Encrypts traffic between Cloudflare and your server (works with self-signed certificates)
+   - **Full (strict)**: Requires valid SSL certificate on your server (recommended for production)
+4. **Enable Proxy**: Make sure the orange cloud (proxy) is enabled on your DNS A record
+
+With Cloudflare's proxy enabled, all traffic will be automatically encrypted via HTTPS without needing to configure SSL certificates on your server.
+
 ## Security Notes
 
 - The script requires root access to manage Docker and system services
 - The nginx-proxy container has read-only access to the Docker socket
 - Ensure your DNS is properly configured before exposing services
-- Consider setting up SSL certificates for HTTPS (nginx-proxy supports Let's Encrypt via companion containers)
+- For SSL/HTTPS, use Cloudflare DNS with SSL mode set to "Full" or "Full (strict)"
 
 ## License
 

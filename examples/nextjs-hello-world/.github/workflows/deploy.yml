@@ -1,0 +1,43 @@
+name: Deploy Next.js App
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      WORKING_DIR: /root/sites/nextjs-hello-world
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t nextjs-hello-world:latest .
+
+      - name: Save Docker image
+        run: docker save nextjs-hello-world:latest | gzip > app.tar.gz
+
+      - name: Copy files to server
+        run: |
+          scp -o StrictHostKeyChecking=no \
+            app.tar.gz \
+            docker-compose.yml \
+            $SSH_USER@$SSH_HOST:$WORKING_DIR/
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ env.WORKING_DIR }}
+            docker load < app.tar.gz
+            docker-compose up -d
+            docker image prune -f

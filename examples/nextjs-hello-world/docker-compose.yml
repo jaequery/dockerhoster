@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: nextjs-hello-world
+    networks:
+      - proxy-network
+    environment:
+      - VIRTUAL_HOST=hello.example.com
+      - VIRTUAL_PORT=3000
+    restart: unless-stopped
+
+networks:
+  proxy-network:
+    external: true
